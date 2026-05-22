@@ -34,7 +34,7 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 Applications are reviewed personally by Ace.
 Limited spots available.
 
-👉 Apply here: https://your-site.com/apply`)
+👉 Apply here: https://acevenen.github.io/avt-website/apply`)
 
 	case "!price":
 		s.ChannelMessageSend(m.ChannelID, `**AVT Coaching — $1,000**
@@ -48,7 +48,7 @@ Limited spots available.
 You don't pay past $1,000 until you make your money back.
 No ghosting. No upsells. One coach, one outcome.
 
-👉 Apply: https://your-site.com/apply`)
+👉 Apply: https://acevenen.github.io/avt-website/apply`)
 
 	case "!faq":
 		s.ChannelMessageSend(m.ChannelID, `**Frequently Asked Questions**
@@ -76,14 +76,13 @@ Type !apply or visit the apply channel.`)
 +$1,510  — Tuesday NQ scalp, 4 trades, 62 minutes
 
 Real receipts posted in #student-results
-👉 Apply: https://your-site.com/apply`)
+👉 Apply: https://acevenen.github.io/avt-website/apply`)
 
 	case "!socials":
 		s.ChannelMessageSend(m.ChannelID, `**Ace Venen Trading**
-🌐 Website: https://your-site.com
-📸 Instagram: https://instagram.com/yourhandle
-🐦 Twitter/X: https://x.com/yourhandle
-📺 YouTube: https://youtube.com/yourhandle`)
+🌐 Website: https://acevenen.github.io/avt-website
+📸 Instagram: https://instagram.com/ace.venen
+🐦 Twitter/X: https://x.com/AceVenen`)
 
 	}
 }
