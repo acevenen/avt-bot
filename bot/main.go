@@ -1,16 +1,18 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"net/http"
-	"os"
-	"os/signal"
-	"strings"
-	"syscall"
+    "fmt"
+    "log"
+    "net/http"
+    "os"
+    "os/signal"
+    "strings"
+    "syscall"
+    "time"
 
-	"github.com/bwmarrin/discordgo"
-	"github.com/joho/godotenv"
+    "github.com/bwmarrin/discordgo"
+    "github.com/joho/godotenv"
+    "github.com/jonas747/dca"
 )
 
 func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -85,6 +87,30 @@ Real receipts posted in #student-results
 	}
 }
 
+func playIntro(s *discordgo.Session, guildID string, channelID string) {
+	vc, err := s.ChannelVoiceJoin(guildID, channelID, false, true)
+	if err != nil {
+		return
+	}
+	defer vc.Disconnect()
+
+	time.Sleep(250 * time.Millisecond)
+
+	opts := dca.StdEncodeOptions
+	opts.RawOutput = true
+	opts.Bitrate = 96
+
+	encodeSession, err := dca.EncodeFile("intro.dca", opts)
+	if err != nil {
+		return
+	}
+	defer encodeSession.Cleanup()
+
+	done := make(chan error)
+	dca.NewStream(encodeSession, vc, done)
+	<-done
+}
+
 func main() {
 	godotenv.Load()
 
@@ -96,7 +122,18 @@ func main() {
 	}
 
 	dg.AddHandler(messageHandler)
-	dg.Identify.Intents = discordgo.IntentsGuildMessages
+
+	dg.AddHandler(func(s *discordgo.Session, vs *discordgo.VoiceStateUpdate) {
+		if vs.ChannelID == "" || vs.UserID == s.State.User.ID {
+			return
+		}
+		if vs.BeforeUpdate != nil && vs.BeforeUpdate.ChannelID != "" {
+			return
+		}
+		go playIntro(s, vs.GuildID, vs.ChannelID)
+	})
+	
+	dg.Identify.Intents = discordgo.IntentsGuildMessages | discordgo.IntentsGuildVoiceStates
 
 	err = dg.Open()
 	if err != nil {
