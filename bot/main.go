@@ -88,8 +88,11 @@ Real receipts posted in #student-results
 }
 
 func playIntro(s *discordgo.Session, guildID string, channelID string) {
+	log.Println("playIntro called: guildID=", guildID, "channelID=", channelID)
+
 	vc, err := s.ChannelVoiceJoin(guildID, channelID, false, true)
 	if err != nil {
+		log.Println("playIntro: failed to join voice channel:", err)
 		return
 	}
 	defer vc.Disconnect()
@@ -102,6 +105,7 @@ func playIntro(s *discordgo.Session, guildID string, channelID string) {
 
 	encodeSession, err := dca.EncodeFile("intro.dca", opts)
 	if err != nil {
+		log.Println("playIntro: failed to open intro.dca:", err)
 		return
 	}
 	defer encodeSession.Cleanup()
