@@ -124,6 +124,7 @@ func main() {
 	dg.AddHandler(messageHandler)
 
 	dg.AddHandler(func(s *discordgo.Session, vs *discordgo.VoiceStateUpdate) {
+		log.Printf("VoiceStateUpdate fired: userID=%s channelID=%s guildID=%s", vs.UserID, vs.ChannelID, vs.GuildID)
 		if vs.ChannelID == "" || vs.UserID == s.State.User.ID {
 			return
 		}
